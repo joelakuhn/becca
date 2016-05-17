@@ -1,0 +1,12 @@
+{
+  "name": "becca",
+  "version": "0.1.0",
+  "description": "A no nonesense build system for the web",
+  "main": "becca.js",
+  "bin": {
+    "becca": "./becca.js"
+  },
+  "scripts": { },
+  "author": "Joel Kuhn <joelakuhn@gmail.com>",
+  "license": "ISC"
+}
