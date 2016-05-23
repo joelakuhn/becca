@@ -30,22 +30,34 @@ Runner.prototype.startNode = function(n) {
   });
 }
 
-function runNode(n, state) {
-  var args = n.args.slice();
+function runNode(node, state) {
+  var args = node.args.slice();
 
-  if (n.action.sync) {
+  if (node.action.coalesce) {
+    node.received++;
+    node.states.push(state);
+    if (node.received < node.count) {
+      return;
+    }
+    else {
+      state = node.states;
+    }
+  }
+  if (node.action.sync) {
     args.unshift(state);
-    n.action.run.apply(n.action, args);
-    runNode(n.next, state);
+    node.action.run.apply(node.action, args);
+    if (node.next) {
+      runNode(node.next, state);
+    }
   }
   else {
     args.unshift(function(e, state) {
-      if (n.next) {
-        runNode(n.next, state);
+      if (node.next) {
+        runNode(node.next, state);
       }
     });
     args.unshift(state);
-    n.action.run.apply(n.action, args);
+    node.action.run.apply(node.action, args);
   }
 }
 
