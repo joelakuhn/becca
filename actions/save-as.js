@@ -1,7 +1,11 @@
+var fs = require('fs');
+
 module.exports = {
   name: 'save_as',
-  sync: true,
-  run: function(state, p) {
+  run: function(state, callback, p) {
     state.file.path = p;
+	fs.writeFile(state.file.path, state.contents, function() {
+	  callback(null, state);
+	});
   }
 }

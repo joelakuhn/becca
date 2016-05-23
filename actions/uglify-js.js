@@ -1,7 +1,11 @@
 module.exports = {
   name: 'uglify_js',
-  run: function(state, callback) {
+  sync: true,
+  run: function(state) {
+  	var uglify = require('uglify-js');
+  	var minified = uglify.minify(state.contents, { fromString: true });
+
     state.file.setExtension('.min.js');
-    callback(null, state);
+    state.contents = minified.code;
   }
 }
