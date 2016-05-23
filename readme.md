@@ -6,7 +6,7 @@ Becca is an experimental build tool for the web, built on the following principl
 - Asset transformations should be flexible and composable.
 - No assumptions should be made about the user's project layout.
 
-Becca uses a simple composable set of transformations that can be chained together and applied to a set of files. becca is very alpha, but can already do some handy work.
+Becca uses a simple composable set of transformations that can be chained together and applied to a set of files. It works essentially like gulp's piping system with a cleaner api. Becca is very alpha, but can already do some handy work.
 
 ## Example
 
@@ -14,7 +14,6 @@ Becca uses a simple composable set of transformations that can be chained togeth
 becca(['styles/homepage.styl', 'styles/interior.styl'])
 .stylus()
 .save_to('public/css')
-.save()
 .clean_css()
 .save();
 ```
@@ -24,7 +23,6 @@ This first section of the script specifies a pipeline for two stylus files. They
 
 ## TODO
 
-- Non one-to-one filters (such as concatenation and handling source-maps)
 - Composable pipelines (taking the results of a pipeline and pluging it into another)
 - Transparent plugin detection
 - Pipeline branching
