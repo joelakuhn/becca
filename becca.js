@@ -7,12 +7,15 @@ var path        = require('path');
 var Pipeline    = require('./pipeline.js');
 var becca       = require('./api.js');
 var require_all = require('./require-all.js');
-var parse_args  = require('./parse-args.js');
+var args_parser = require('./args-parser.js');
 
 ///////// REGISTER ACTIONS /////////
 
 require_all('actions').forEach(Pipeline.register);
 
+///////// LOAD BUILT IN TASKS /////////
+
+require_all('tasks');
 
 ///////// LOAD RULES /////////
 
@@ -24,25 +27,13 @@ else {
 	return;
 }
 
-///////// LOAD ARGS /////////
-
-var args = parse_args();
-
-
 ///////// REAL WORK /////////
 
-var command = args[0] || 'build';
+var command = args_parser.get_command();
 
-if (command == 'build') {
-	var runner = becca.build();
-}
-else if (command == 'watch') {
-	var runner = becca.build();
-	var watcher = becca.watch(runner);
-}
-else if (command in becca.tasks) {
-	becca.tasks[command](args);
+if (command in becca.tasks) {
+	becca.tasks[command]();
 }
 else {
-	console.error('unknown command ' + command);
+	console.error('unknown command: ', command);
 }
