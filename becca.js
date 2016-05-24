@@ -2,6 +2,7 @@
 
 ///////// DEPENDENCIES /////////
 
+var fs          = require('fs');
 var path        = require('path');
 var Pipeline    = require('./pipeline.js');
 var becca       = require('./api.js');
@@ -15,7 +16,13 @@ require_all('actions').forEach(Pipeline.register);
 
 ///////// LOAD RULES /////////
 
-require(path.join(process.cwd(), 'beccaconfig.js'));
+if (fs.existsSync('beccaconfig.js')) {
+	require(path.join(process.cwd(), 'beccaconfig.js'));
+}
+else {
+	console.error('There is no beccaconfig.js file in this directory.')
+	return;
+}
 
 ///////// LOAD ARGS /////////
 
@@ -32,4 +39,7 @@ if (command == 'build') {
 else if (command == 'watch') {
 	var runner = becca.build();
 	var watcher = becca.watch(runner);
+}
+else {
+	console.error('unknown command ' + command);
 }
