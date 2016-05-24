@@ -26,5 +26,4 @@ This first section of the script specifies a pipeline for two stylus files. They
 - Composable pipelines (taking the results of a pipeline and pluging it into another)
 - Transparent plugin detection
 - Pipeline branching
-- Incremental builds (everything is designed with this in mind)
-- Watch mode
+- Extensible watch mode
