@@ -19,4 +19,5 @@ require(path.join(process.cwd(), 'beccaconfig.js'));
 
 ///////// REAL WORK /////////
 
-becca.build();
+var runner = becca.build();
+var watcher = becca.watch(runner);

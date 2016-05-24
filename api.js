@@ -1,7 +1,9 @@
 var Pipeline    = require('./pipeline.js');
 var ActionGraph = require('./action-graph.js');
 var Runner      = require('./runner.js');
+var Watcher     = require('./watcher.js');
 var glob        = require('./glob.js');
+var fs          = require('fs');
 
 function combine_arguments(args) {
   var files = [];
@@ -16,6 +18,8 @@ function combine_arguments(args) {
   return files;
 }
 
+
+
 function becca() {
   var files = combine_arguments(arguments);
   var new_pipeline = new Pipeline(files);
@@ -23,14 +27,24 @@ function becca() {
   return new_pipeline;
 }
 
+becca.pipelines = [];
+
+
+
 becca.build = function() {
 	var graphs = becca.pipelines.map((p) => new ActionGraph(p));
 
 	var runner = new Runner(graphs);
 
 	runner.start();
+
+  return runner;
 }
 
-becca.pipelines = [];
+becca.watch = function(runner) {
+  var watcher = new Watcher(runner);
+  watcher.start();
+  return watcher;
+}
 
 module.exports = global.becca = becca;

@@ -17,7 +17,7 @@ function ActionGraph(pipeline) {
             args: a.args,
             count: 1,
             received: 0,
-            states: []
+            states: {}
           }
         }
       }

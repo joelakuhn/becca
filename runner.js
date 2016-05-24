@@ -35,12 +35,17 @@ function runNode(node, state) {
 
   if (node.action.coalesce) {
     node.received++;
-    node.states.push(state);
+    node.states[state.file.path] = state;
     if (node.received < node.count) {
       return;
     }
     else {
-      state = node.states;
+      state = [];
+      for (var file in node.states) {
+        if (node.states.propertyIsEnumerable(file)) {
+          state.push(node.states[file]);
+        }
+      }
     }
   }
   if (node.action.sync) {
