@@ -40,6 +40,9 @@ else if (command == 'watch') {
 	var runner = becca.build();
 	var watcher = becca.watch(runner);
 }
+else if (command in becca.tasks) {
+	becca.tasks[command](args);
+}
 else {
 	console.error('unknown command ' + command);
 }

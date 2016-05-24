@@ -28,6 +28,7 @@ function becca() {
 }
 
 becca.pipelines = [];
+becca.tasks = {};
 
 
 
@@ -45,6 +46,10 @@ becca.watch = function(runner) {
   var watcher = new Watcher(runner);
   watcher.start();
   return watcher;
+}
+
+becca.task = function(name, callback) {
+  becca.tasks[name] = callback;
 }
 
 module.exports = global.becca = becca;
