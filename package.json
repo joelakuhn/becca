@@ -7,6 +7,10 @@
     "becca": "./becca.js"
   },
   "scripts": { },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joelakuhn/becca.git"
+  },
   "author": "Joel Kuhn <joelakuhn@gmail.com>",
   "license": "ISC"
 }
