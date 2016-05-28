@@ -29,7 +29,7 @@ else {
 
 ///////// REAL WORK /////////
 
-var command = args_parser.get_command();
+var command = args_parser.get_command() || 'build';
 
 if (command in becca.tasks) {
 	becca.tasks[command]();
