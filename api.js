@@ -49,7 +49,11 @@ becca.watch = function(runner) {
 }
 
 becca.task = function(name, callback) {
-  becca.tasks[name] = callback;
+  if (typeof name == 'string') name = [name];
+
+  for (var i=0; i<name.length; i++) {
+    becca.tasks[name[i]] = callback;
+  }
 }
 
 module.exports = global.becca = becca;
