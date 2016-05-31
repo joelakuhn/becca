@@ -15,6 +15,7 @@ becca(['styles/homepage.styl', 'styles/interior.styl'])
 .stylus()
 .save_to('public/css')
 .clean_css()
+.combine('styles.min.css')
 .save();
 ```
 
