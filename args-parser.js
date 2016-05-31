@@ -37,15 +37,40 @@ function parse(def, args) {
 }
 
 function get_command(args) {
-	if (!args) {
-		args = process.argv.slice(2);
-	}
 	for (var i=0; i<args.length; i++) {
 		if (args[i][0] != '-') return args[i];
 	}
 }
 
+function split_args(args) {
+	var argsets = [[]];
+	var curr = 0;
+	for (var i=0; i<args.length; i++) {
+		if (args[i] == ',') {
+			argsets[++curr] = [];
+		}
+		else {
+			argsets[curr].push(args[i]);
+		}
+	}
+	return argsets;
+}
+
+function get_commands(args) {
+	if (!args) {
+		args = process.argv.slice(2);
+	}
+
+	var argsets = split_args(args);
+	return argsets.map(function(argset) {
+		return {
+			command: get_command(argset),
+			args: argset.slice(1)
+		}
+	})
+}
+
 module.exports = {
 	parse: parse,
-	get_command: get_command,
+	get_commands: get_commands,
 }

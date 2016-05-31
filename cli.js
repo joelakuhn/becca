@@ -2,17 +2,19 @@ function cli() {
 
   var args_parser = require('./args-parser.js');
 
-  var command = args_parser.get_command() || 'build';
+  var commands = args_parser.get_commands() || { command: 'build' };
 
-  if (command in becca.tasks) {
-    var task = becca.tasks[command];
-    var args = args_parser.parse(task.args_config);
-    args.shift();
-    task.callback(args);
-  }
-  else {
-    console.error('unknown command: ', command);
-  }
+  commands.forEach(function(command) {
+    if (command.command in becca.tasks) {
+      var task = becca.tasks[command.command];
+      var args = args_parser.parse(task.args_config, command.args);
+      task.callback(args);
+    }
+    else {
+      console.error('unknown command: ', command.command);
+    }
+
+  })
 
 }
 
