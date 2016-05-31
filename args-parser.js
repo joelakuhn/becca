@@ -46,11 +46,16 @@ function split_args(args) {
 	var argsets = [[]];
 	var curr = 0;
 	for (var i=0; i<args.length; i++) {
-		if (args[i] == ',') {
+		var arg = args[i];
+		if (arg == ',') {
+			argsets[++curr] = [];
+		}
+		else if (arg[arg.length - 1] == ',') {
+			argsets[curr].push(arg.substr(0, arg.length - 1))
 			argsets[++curr] = [];
 		}
 		else {
-			argsets[curr].push(args[i]);
+			argsets[curr].push(arg);
 		}
 	}
 	return argsets;
