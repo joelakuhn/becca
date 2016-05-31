@@ -1,5 +1,4 @@
 var fs = require('fs');
-var glob = require('glob')
 
 function Watcher(runner) {
 	this.runner = runner;
