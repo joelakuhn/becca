@@ -32,7 +32,10 @@ else {
 var command = args_parser.get_command() || 'build';
 
 if (command in becca.tasks) {
-	becca.tasks[command]();
+  var task = becca.tasks[command];
+  var args = args_parser.parse(task.args_config);
+  args.shift();
+	task.callback(args);
 }
 else {
 	console.error('unknown command: ', command);

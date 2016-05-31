@@ -31,6 +31,10 @@ becca.pipelines = [];
 becca.tasks = {};
 
 
+becca.action = function(action) {
+  Pipeline.register(action);
+}
+
 
 becca.build = function() {
 	var graphs = becca.pipelines.map((p) => new ActionGraph(p));
@@ -48,11 +52,17 @@ becca.watch = function(runner) {
   return watcher;
 }
 
-becca.task = function(name, callback) {
+becca.task = function(name, callback, args_config) {
+  if (typeof args_config === 'undefined') {
+    args_config = {};
+  }
   if (typeof name == 'string') name = [name];
 
   for (var i=0; i<name.length; i++) {
-    becca.tasks[name[i]] = callback;
+    becca.tasks[name[i]] = {
+      callback: callback,
+      args_config: args_config,
+    };
   }
 }
 
