@@ -1,5 +1,4 @@
 var NodeSet     = require('./nodeset.js');
-var ActionGraph = require('./action-graph.js');
 var Runner      = require('./runner.js');
 var Watcher     = require('./watcher.js');
 var glob        = require('./glob.js');
