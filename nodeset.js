@@ -20,16 +20,30 @@ function expand_objects(args) {
 
 function NodeSet(objects, action, args) {
   var expanded_objects = expand_objects(objects);
-  this.nodes = expanded_objects.map(function(object) {
-    var new_node = {
-      file: object.file ? object.file : object,
+  if (action.coalesce) {
+    var node = {
+      file: '',
       action: action,
       args: args || [],
-      prev: object.file ? object : null
+      prev: expanded_objects
     }
-    if (object.file) object.next = new_node;
-    return new_node;
-  });
+    expanded_objects.forEach(function(object) {
+      object.next = node;
+    });
+    this.nodes = [ node ];
+  }
+  else {
+    this.nodes = expanded_objects.map(function(object) {
+      var new_node = {
+        file: (typeof object.file !== 'undefined') ? object.file : object,
+        action: action,
+        args: args || [],
+        prev: (typeof object.file !== 'undefined') ? [ object ] : null
+      }
+      if ((typeof object.file) !== 'undefined') object.next = new_node;
+      return new_node;
+    });
+  }
 }
 
 NodeSet.register = function(action) {

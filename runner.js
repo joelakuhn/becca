@@ -24,29 +24,31 @@ function runNode(node, state) {
   var args = node.args.slice();
 
   if (node.action.coalesce) {
-    node.received++;
-    node.states[state.file.path] = state;
-    if (node.received < node.count) {
+    if (node.prev && !node.prev.reduce((acc, n) => {
+      return acc && n.run
+    }, true)) {
       return;
     }
-    else {
-      state = [];
-      for (var file in node.states) {
-        if (node.states.propertyIsEnumerable(file)) {
-          state.push(node.states[file]);
-        }
-      }
-    }
+    state = node.prev.map((n) => n.state);
   }
+
+  node.state = state;
+
+  if (node.action.path) {
+    node.action.path(state);
+  }
+
   if (node.action.sync) {
     args.unshift(state);
     node.action.run.apply(node.action, args);
+    node.run = true;
     if (node.next) {
       runNode(node.next, state);
     }
   }
   else {
     args.unshift(function(e, state) {
+      node.run = true;
       if (node.next) {
         runNode(node.next, state);
       }
