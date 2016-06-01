@@ -1,28 +1,14 @@
-var Pipeline    = require('./pipeline.js');
+var NodeSet    = require('./nodeset.js');
 var ActionGraph = require('./action-graph.js');
 var Runner      = require('./runner.js');
 var Watcher     = require('./watcher.js');
 var glob        = require('./glob.js');
 var fs          = require('fs');
 
-function combine_arguments(args) {
-  var files = [];
-  for (var i=0; i<args.length; i++) {
-    if (typeof args[i] === 'string') {
-      glob(args[i]).forEach((f) => files.push(f))
-    }
-    else if (typeof args[i] === 'object' && 'forEach' in args[i]) {
-      args[i].forEach((f) => glob(f).forEach((f) => files.push(f)));
-    }
-  }
-  return files;
-}
-
-
 
 function becca() {
-  var files = combine_arguments(arguments);
-  var new_pipeline = new Pipeline(files);
+  var objects = Array.prototype.slice.apply(arguments);
+  var new_pipeline = new NodeSet(objects);
   becca.pipelines.push(new_pipeline);
   return new_pipeline;
 }
@@ -32,14 +18,12 @@ becca.tasks = {};
 
 
 becca.action = function(action) {
-  Pipeline.register(action);
+  NodeSet.register(action);
 }
 
 
 becca.build = function() {
-	var graphs = becca.pipelines.map((p) => new ActionGraph(p));
-
-	var runner = new Runner(graphs);
+	var runner = new Runner(becca.pipelines);
 
 	runner.start();
 

@@ -4,14 +4,14 @@
 
 var fs          = require('fs');
 var path        = require('path');
-var Pipeline    = require('./pipeline.js');
+var NodeSet     = require('./nodeset.js');
 var becca       = require('./api.js');
 var require_all = require('./require-all.js');
 var cli         = require('./cli.js');
 
 ///////// REGISTER ACTIONS /////////
 
-require_all('actions').forEach(Pipeline.register);
+require_all('actions').forEach(NodeSet.register);
 
 ///////// LOAD BUILT IN TASKS /////////
 

@@ -4,7 +4,9 @@ module.exports = {
   name: 'stylus',
   run: function(state, callback) {
     state.contents = stylus.render(state.contents);
-    state.file.setExtension('.css');
     callback(null, state);
+  },
+  path: function(state, args) {
+    state.file.setExtension('.css');
   }
 }

@@ -2,7 +2,10 @@ function cli() {
 
   var args_parser = require('./args-parser.js');
 
-  var commands = args_parser.get_commands() || { command: 'build' };
+  var commands = args_parser.get_commands();
+  if (commands.length == 0) {
+    commands = [ { command: 'build' } ];
+  }
 
   commands.forEach(function(command) {
     if (command.command in becca.tasks) {

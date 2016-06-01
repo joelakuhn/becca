@@ -4,7 +4,10 @@ module.exports = {
   run: function(state, options) {
     var CleanCSS = require('clean-css');
 
-    state.file.setExtension('.min.css');
     state.contents = new CleanCSS(options).minify(state.contents).styles;
+  },
+
+  path: function(state, args) {
+    state.file.setExtension('.min.css');
   }
 }

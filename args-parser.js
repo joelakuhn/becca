@@ -58,7 +58,12 @@ function split_args(args) {
 			argsets[curr].push(arg);
 		}
 	}
-	return argsets;
+	if (argsets[0].length > 0) {
+		return argsets;
+	}
+	else {
+		return [];
+	}
 }
 
 function get_commands(args) {
