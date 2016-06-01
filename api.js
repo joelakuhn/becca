@@ -1,14 +1,15 @@
-var NodeSet    = require('./nodeset.js');
+var NodeSet     = require('./nodeset.js');
 var ActionGraph = require('./action-graph.js');
 var Runner      = require('./runner.js');
 var Watcher     = require('./watcher.js');
 var glob        = require('./glob.js');
 var fs          = require('fs');
+var open_action = require('./actions/open.js');
 
 
 function becca() {
   var objects = Array.prototype.slice.apply(arguments);
-  var new_pipeline = new NodeSet(objects);
+  var new_pipeline = new NodeSet(objects, open_action);
   becca.pipelines.push(new_pipeline);
   return new_pipeline;
 }

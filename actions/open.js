@@ -4,7 +4,7 @@ module.exports = {
     if (typeof state.contents === 'undefined') {
       var fs = require('fs');
       fs.readFile(state.file.path, function(err, contents) {
-        state.contents = contents;
+        state.contents = contents.toString();
         callback(err, state);
       });
     }

@@ -18,13 +18,13 @@ function expand_objects(args) {
   return objects;
 }
 
-function NodeSet(objects, action) {
+function NodeSet(objects, action, args) {
   var expanded_objects = expand_objects(objects);
   this.nodes = expanded_objects.map(function(object) {
     var new_node = {
       file: object.file ? object.file : object,
       action: action,
-      args: Array.prototype.slice.apply(arguments),
+      args: args || [],
       prev: object.file ? object : null
     }
     if (object.file) object.next = new_node;
@@ -35,7 +35,8 @@ function NodeSet(objects, action) {
 NodeSet.register = function(action) {
   NodeSet.prototype[action.name] = (function(action) {
     return function() {
-      var new_nodeset = new NodeSet([this], action);
+      var args = Array.prototype.slice.apply(arguments);
+      var new_nodeset = new NodeSet([this], action, args);
       return new_nodeset;
     }
   })(action);
