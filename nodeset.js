@@ -22,6 +22,7 @@ function NodeSet(objects, action, args) {
   var expanded_objects = expand_objects(objects);
   if (action.coalesce) {
     var node = {
+      root: false,
       file: '',
       action: action,
       args: args || [],
@@ -34,13 +35,15 @@ function NodeSet(objects, action, args) {
   }
   else {
     this.nodes = expanded_objects.map(function(object) {
+      var root = typeof object.file === 'undefined';
       var new_node = {
-        file: (typeof object.file !== 'undefined') ? object.file : object,
+        file: root ? object : object.file,
         action: action,
         args: args || [],
-        prev: (typeof object.file !== 'undefined') ? [ object ] : null
+        prev: root ? null : [ object ],
+        root: root
       }
-      if ((typeof object.file) !== 'undefined') object.next = new_node;
+      if (!root) object.next = new_node;
       return new_node;
     });
   }

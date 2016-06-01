@@ -14,13 +14,13 @@ Runner.prototype.start = function() {
 
 function runPipeline(pipeline) {
   pipeline.nodes.forEach(function(node) {
-    runNode(node, {
+    Runner.runNode(node, {
       file: new FilePath(node.file)
     });
   });
 }
 
-function runNode(node, state) {
+Runner.runNode = function(node, state) {
   var args = node.args.slice();
 
   if (node.action.coalesce) {
@@ -43,14 +43,14 @@ function runNode(node, state) {
     node.action.run.apply(node.action, args);
     node.run = true;
     if (node.next) {
-      runNode(node.next, state);
+      Runner.runNode(node.next, state);
     }
   }
   else {
     args.unshift(function(e, state) {
       node.run = true;
       if (node.next) {
-        runNode(node.next, state);
+        Runner.runNode(node.next, state);
       }
     });
     args.unshift(state);

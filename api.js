@@ -31,9 +31,9 @@ becca.build = function() {
   return runner;
 }
 
-becca.watch = function(runner) {
-  var watcher = new Watcher(runner);
-  watcher.start();
+becca.watch = function() {
+  var watcher = new Watcher();
+  watcher.add_nodesets(becca.pipelines);
   return watcher;
 }
 
