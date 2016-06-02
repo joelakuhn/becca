@@ -35,26 +35,32 @@ Runner.runNode = function(node, state) {
   node.state = state;
 
   if (node.action.path) {
-    node.action.path(state);
+    args.unshift(state);
+    node.action.path.apply(node.action.path, args)
   }
 
-  if (node.action.sync) {
-    args.unshift(state);
-    node.action.run.apply(node.action, args);
-    node.run = true;
-    if (node.next) {
-      Runner.runNode(node.next, state);
-    }
-  }
-  else {
-    args.unshift(function(e, state) {
+  try {
+    if (node.action.sync) {
+      args.unshift(state);
+      node.action.run.apply(node.action, args);
       node.run = true;
       if (node.next) {
         Runner.runNode(node.next, state);
       }
-    });
-    args.unshift(state);
-    node.action.run.apply(node.action, args);
+    }
+    else {
+      args.unshift(function(e, state) {
+        if (e) { console.log(e) }
+        node.run = true;
+        if (node.next) {
+          Runner.runNode(node.next, state);
+        }
+      });
+      args.unshift(state);
+      node.action.run.apply(node.action, args);
+    }
+  } catch (e) {
+    console.log(e);
   }
 }
 
