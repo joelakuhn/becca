@@ -1,3 +1,3 @@
-becca.task('build', function() {
+becca.task(['build', 'b'], function() {
 	becca.build();
 });
