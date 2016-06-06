@@ -1,4 +1,6 @@
 var glob = require('./glob.js');
+var Runner = require('./runner.js');
+var Watcher = require('./watcher.js');
 
 function expand_objects(args) {
   var objects = [];
@@ -47,6 +49,41 @@ function NodeSet(objects, action, args) {
       return new_node;
     });
   }
+
+  if (objects.length == 1 && objects[0] instanceof NodeSet) {
+    this.prev = objects[0];
+    objects[0].next = this;
+  }
+}
+
+NodeSet.prototype.getFirst = function() {
+  var curr = this;
+  while (curr.prev) {
+    curr = curr.prev;
+  }
+  return curr;
+}
+
+NodeSet.prototype.getLast = function() {
+  var curr = this;
+  while (curr.next) {
+    curr = curr.next;
+  }
+  return curr;
+}
+
+NodeSet.prototype.build = function() {
+  var first = this.getFirst();
+  var runner = new Runner(first);
+  runner.start();
+  return runner;
+}
+
+NodeSet.prototype.watch = function() {
+  var first = this.getFirst();
+  var watcher = new Watcher();
+  watcher.add_nodeset(first);
+  return watcher;
 }
 
 NodeSet.register = function(action) {

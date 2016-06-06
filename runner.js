@@ -3,6 +3,9 @@ var fs = require('fs');
 var FilePath = require('./file-path.js');
 
 function Runner(pipelines) {
+  if (!pipelines.forEach) {
+    pipelines = [pipelines];
+  }
   this.pipelines = pipelines
 }
 
