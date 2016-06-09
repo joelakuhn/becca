@@ -44,7 +44,7 @@ function create_nodes(objects, action, args) {
       prev: root ? null : [ object ],
       root: root
     }
-    if (!root) object.next = new_node;
+    if (typeof object !== 'string') object.next = new_node;
     return new_node;
   });
   return nodes;
@@ -54,23 +54,23 @@ function NodeSet(objects, action, args) {
   var expanded_objects = expand_objects(objects);
 
   if (action.coalesce) {
-    this.nodes = [ create_coalesce_node(objects, action, args) ];
+    this.nodes = [ create_coalesce_node(expanded_objects, action, args) ];
   }
   else {
-    this.nodes = create_nodes(objects, action, args);
+    this.nodes = create_nodes(expanded_objects, action, args);
   }
 
   this.prev = [];
 
-  objects.forEach(function(object) {
+  objects.forEach((object) => {
     if (object instanceof NodeSet) {
       this.prev.push(object);
       object.next = this;
     }
-  }
+  });
 }
 
-NodeSet.prototype.getRoots = function() {
+NodeSet.prototype.getRoot = function() {
   var curr = this;
   while (curr.prev.length) {
     curr = curr.prev;
@@ -87,14 +87,14 @@ NodeSet.prototype.getLast = function() {
 }
 
 NodeSet.prototype.build = function() {
-  var roots = this.getRoots();
-  var runner = new Runner(roots);
+  var root = this.getRoot();
+  var runner = new Runner(root);
   runner.start();
   return runner;
 }
 
 NodeSet.prototype.watch = function() {
-  var roots = this.getRoots();
+  var roots = this.getRoot();
   var watcher = new Watcher();
   watcher.add_nodesets(roots);
   return watcher;
