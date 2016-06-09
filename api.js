@@ -4,6 +4,7 @@ var Watcher     = require('./watcher.js');
 var glob        = require('./glob.js');
 var fs          = require('fs');
 var open_action = require('./actions/open.js');
+var load_config = require('./load-config.js');
 
 
 function becca() {
@@ -15,6 +16,10 @@ function becca() {
 
 becca.pipelines = [];
 becca.tasks = {};
+
+becca.load_config = function() {
+  return load_config();
+}
 
 
 becca.action = function(action) {
