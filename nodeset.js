@@ -20,45 +20,59 @@ function expand_objects(args) {
   return objects;
 }
 
-function NodeSet(objects, action, args) {
-  var expanded_objects = expand_objects(objects);
-  if (action.coalesce) {
-    var node = {
-      root: false,
-      file: '',
+function create_coalesce_node(objects, action, args) {
+  var node = {
+    root: false,
+    file: '',
+    action: action,
+    args: args || [],
+    prev: objects
+  }
+  objects.forEach(function(object) {
+    object.next = node;
+  });
+  return node;
+}
+
+function create_nodes(objects, action, args) {
+  var nodes = objects.map(function(object) {
+    var root = typeof object.file === 'undefined';
+    var new_node = {
+      file: root ? object : object.file,
       action: action,
       args: args || [],
-      prev: expanded_objects
+      prev: root ? null : [ object ],
+      root: root
     }
-    expanded_objects.forEach(function(object) {
-      object.next = node;
-    });
-    this.nodes = [ node ];
+    if (!root) object.next = new_node;
+    return new_node;
+  });
+  return nodes;
+}
+
+function NodeSet(objects, action, args) {
+  var expanded_objects = expand_objects(objects);
+
+  if (action.coalesce) {
+    this.nodes = [ create_coalesce_node(objects, action, args) ];
   }
   else {
-    this.nodes = expanded_objects.map(function(object) {
-      var root = typeof object.file === 'undefined';
-      var new_node = {
-        file: root ? object : object.file,
-        action: action,
-        args: args || [],
-        prev: root ? null : [ object ],
-        root: root
-      }
-      if (!root) object.next = new_node;
-      return new_node;
-    });
+    this.nodes = create_nodes(objects, action, args);
   }
 
-  if (objects.length == 1 && objects[0] instanceof NodeSet) {
-    this.prev = objects[0];
-    objects[0].next = this;
+  this.prev = [];
+
+  objects.forEach(function(object) {
+    if (object instanceof NodeSet) {
+      this.prev.push(object);
+      object.next = this;
+    }
   }
 }
 
-NodeSet.prototype.getFirst = function() {
+NodeSet.prototype.getRoots = function() {
   var curr = this;
-  while (curr.prev) {
+  while (curr.prev.length) {
     curr = curr.prev;
   }
   return curr;
@@ -73,16 +87,16 @@ NodeSet.prototype.getLast = function() {
 }
 
 NodeSet.prototype.build = function() {
-  var first = this.getFirst();
-  var runner = new Runner(first);
+  var roots = this.getRoots();
+  var runner = new Runner(roots);
   runner.start();
   return runner;
 }
 
 NodeSet.prototype.watch = function() {
-  var first = this.getFirst();
+  var roots = this.getRoots();
   var watcher = new Watcher();
-  watcher.add_nodeset(first);
+  watcher.add_nodesets(roots);
   return watcher;
 }
 
