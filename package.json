@@ -4,7 +4,7 @@
   "description": "A no nonesense build system for the web",
   "main": "becca.js",
   "bin": {
-    "becca": "./becca.js"
+    "becca": "./becca-cli.js"
   },
   "scripts": { },
   "repository": {
