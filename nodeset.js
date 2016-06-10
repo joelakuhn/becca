@@ -68,20 +68,20 @@ function CheckObjects(objects, selectors) {
 
 }
 
-function NodeSet(objects, action, args) {
-  var expanded_objects = expand_selectors(objects);
-  CheckObjects(expanded_objects, objects);
+function NodeSet(selectors, action, args) {
+  var objects = expand_selectors(selectors);
+  CheckObjects(objects, selectors);
   if (action.coalesce) {
-    this.nodes = [ create_coalesce_node(expanded_objects, action, args) ];
+    this.nodes = [ create_coalesce_node(objects, action, args) ];
   }
   else {
-    this.nodes = create_nodes(expanded_objects, action, args);
+    this.nodes = create_nodes(objects, action, args);
   }
 
   this.prev = [];
   this.watched_files = [];
 
-  objects.forEach((object) => {
+  selectors.forEach((object) => {
     if (object instanceof NodeSet) {
       this.prev.push(object);
       object.next = this;
