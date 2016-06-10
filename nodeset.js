@@ -50,9 +50,27 @@ function create_nodes(objects, action, args) {
   return nodes;
 }
 
+function CheckObjects(objects, selectors) {
+
+  var path_objects = objects.filter(function(object) {
+    return typeof object == 'string';
+  });
+
+  var path_selectors = selectors.filter(function(selector) {
+    return typeof selector == 'string';
+  });
+
+  if (path_objects.length == 0 && path_selectors.length > 0) {
+    console.log('You have a selector that did not match any files.');
+    console.log(path_selectors);
+  }
+
+
+}
+
 function NodeSet(objects, action, args) {
   var expanded_objects = expand_objects(objects);
-
+  CheckObjects(expanded_objects, objects);
   if (action.coalesce) {
     this.nodes = [ create_coalesce_node(expanded_objects, action, args) ];
   }
@@ -73,7 +91,8 @@ function NodeSet(objects, action, args) {
 NodeSet.prototype.getRoot = function() {
   var curr = this;
   while (curr.prev.length) {
-    curr = curr.prev;
+    // TODO: Currently all nodes only have one ancestor. If this changes, this will need to be reworked.
+    curr = curr.prev[0];
   }
   return curr;
 }
