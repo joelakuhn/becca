@@ -12,7 +12,7 @@ Watcher.prototype.add_nodeset = function(nodeset) {
 	nodeset.nodes.forEach(function(node) {
 		if (node.root) {
 			var w = fs.watch(node.file, function() {
-				Runner.runNode(node, { file: new FilePath(node.file) });
+				run(node);
 			});
 		}
 	});
@@ -27,6 +27,20 @@ Watcher.prototype.add_nodesets = function(nodesets) {
 Watcher.prototype.stop = function() {
 	this.watch_procs.forEach(function(w) {
 		w.close();
+	});
+}
+
+function run(node) {
+	fs.lstat(node.file, function(err, stats) {
+		if (!err) {
+			if (!node.mtime || +node.mtime != +stats.mtime) {
+				node.mtime = stats.mtime;
+				Runner.runNode(node, { file: new FilePath(node.file) });
+			}
+		}
+		else {
+			console.log('Watcher could not get modified time for ' + node.file);
+		}
 	});
 }
 
