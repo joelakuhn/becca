@@ -2,7 +2,7 @@ var glob = require('./glob.js');
 var Runner = require('./runner.js');
 var Watcher = require('./watcher.js');
 
-function expand_objects(args) {
+function expand_selectors(args) {
   var objects = [];
   for (var i=0; i<args.length; i++) {
     if (typeof args[i] === 'string') {
@@ -69,7 +69,7 @@ function CheckObjects(objects, selectors) {
 }
 
 function NodeSet(objects, action, args) {
-  var expanded_objects = expand_objects(objects);
+  var expanded_objects = expand_selectors(objects);
   CheckObjects(expanded_objects, objects);
   if (action.coalesce) {
     this.nodes = [ create_coalesce_node(expanded_objects, action, args) ];
@@ -79,6 +79,7 @@ function NodeSet(objects, action, args) {
   }
 
   this.prev = [];
+  this.watched_files = [];
 
   objects.forEach((object) => {
     if (object instanceof NodeSet) {
@@ -109,14 +110,23 @@ NodeSet.prototype.build = function() {
   var root = this.getRoot();
   var runner = new Runner(root);
   runner.start();
-  return runner;
+  return this;
 }
 
 NodeSet.prototype.watch = function() {
-  var roots = this.getRoot();
+  var root = this.getRoot();
   var watcher = new Watcher();
-  watcher.add_nodesets(roots);
-  return watcher;
+  watcher.add_nodesets(root);
+  return this;
+}
+
+NodeSet.prototype.add_watch = function() {
+  var files = expand_selectors(arguments)
+  var root = this.getRoot();
+  for (var i=0; i<files.length; i++) {
+    root.watched_files.push(files[i]);
+  }
+  return this;
 }
 
 NodeSet.register = function(action) {

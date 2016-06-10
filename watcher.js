@@ -12,10 +12,18 @@ Watcher.prototype.add_nodeset = function(nodeset) {
 	nodeset.nodes.forEach(function(node) {
 		if (node.root) {
 			var w = fs.watch(node.file, function() {
-				run(node);
+				run(node.file, node);
 			});
 		}
 	});
+
+	nodeset.watched_files.forEach(function(file) {
+		fs.watch(file, function() {
+			for (var i=0; i<nodeset.nodes.length; i++) {
+				run(file, nodeset.nodes[i]);
+			}
+		});
+	})
 }
 
 Watcher.prototype.add_nodesets = function(nodesets) {
@@ -30,8 +38,8 @@ Watcher.prototype.stop = function() {
 	});
 }
 
-function run(node) {
-	fs.lstat(node.file, function(err, stats) {
+function run(file, node) {
+	fs.lstat(file, function(err, stats) {
 		if (!err) {
 			if (!node.mtime || +node.mtime != +stats.mtime) {
 				node.mtime = stats.mtime;
