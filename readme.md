@@ -24,7 +24,8 @@ This first section of the script specifies a pipeline for two stylus files. They
 
 ## TODO
 
-- Composable pipelines (taking the results of a pipeline and pluging it into another)
+- ~Composable pipelines (taking the results of a pipeline and pluging it into another)~
 - Transparent plugin detection
 - Pipeline branching
 - Extensible watch mode
+- Handle binary files properly
