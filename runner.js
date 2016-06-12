@@ -23,45 +23,67 @@ function runPipeline(pipeline) {
   });
 }
 
+function prereqs_met(node, state) {
+  return !node.prev || node.prev.reduce((acc, n) => {
+    return acc && n.run
+  }, true);
+}
+
+function get_state(node, state) {
+  if (node.action.coalesce) {
+    return state = node.prev.map((n) => n.state);
+  }
+  else {
+    return state;
+  }
+}
+
+function run_path(node, args) {
+  if (node.action.path) {
+    args.unshift(node.state);
+    node.action.path.apply(node.action.path, args)
+  }
+}
+
+function run_sync(node, args) {
+  args.unshift(node.state);
+  node.action.run.apply(node.action, args);
+  node.run = true;
+  if (node.next) {
+    Runner.runNode(node.next, node.state);
+  }
+}
+
+function run_async(node, args) {
+  args.unshift(function(e, state) {
+    if (e) { console.log(e); }
+    node.run = true;
+    if (node.next) {
+      Runner.runNode(node.next, state);
+    }
+  });
+  args.unshift(node.state);
+  node.action.run.apply(node.action, args);
+}
+
 Runner.runNode = function(node, state) {
   var args = node.args.slice();
 
-  if (node.action.coalesce) {
-    if (node.prev && !node.prev.reduce((acc, n) => {
-      return acc && n.run
-    }, true)) {
-      return;
-    }
-    state = node.prev.map((n) => n.state);
-  }
+  if (!prereqs_met(node, state)) return;
 
-  node.state = state;
-
-  if (node.action.path) {
-    args.unshift(state);
-    node.action.path.apply(node.action.path, args)
-  }
+  node.state = get_state(node, state);
 
   try {
+
+    run_path(node, args);
+
     if (node.action.sync) {
-      args.unshift(state);
-      node.action.run.apply(node.action, args);
-      node.run = true;
-      if (node.next) {
-        Runner.runNode(node.next, state);
-      }
+      run_sync(node, args);
     }
     else {
-      args.unshift(function(e, state) {
-        if (e) { console.log(e) }
-        node.run = true;
-        if (node.next) {
-          Runner.runNode(node.next, state);
-        }
-      });
-      args.unshift(state);
-      node.action.run.apply(node.action, args);
+      run_async(node, args);
     }
+
   } catch (e) {
     console.log(e);
   }
