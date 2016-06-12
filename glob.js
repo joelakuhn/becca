@@ -2,6 +2,7 @@ var fs = require('fs');
 var fspath = require('path');
 
 var dircache = null;
+var regex_cache = [];
 
 function find(path, arr) {
 	var stats = fs.lstatSync(path);
@@ -11,12 +12,14 @@ function find(path, arr) {
 	}
 	else {
 		arr.push(path);
-		// console.log(regex);
 	}
 	return arr;
 }
 
 function make_glob_regex(wd, glob) {
+	if (regex_cache[glob]) {
+		return regex_cache[glob]
+	}
 	glob_regex_str = (wd + fspath.sep + glob).replace(/(?!\\)(\*+)/g, function(match) {
 		if (match == '**') {
 			return '.*';
@@ -25,10 +28,10 @@ function make_glob_regex(wd, glob) {
 			return '[^\\' + fspath.sep + ']*';
 		}
 	});
-	return new RegExp('^' + glob_regex_str + '$');
+	return regex_cache[glob] = new RegExp('^' + glob_regex_str + '$');
 }
 
-function glob(glob) {
+function expand_glob(glob) {
 	if (!glob.match(/(?!\\)(\*+)/)) {
 		if (fs.existsSync(glob)) {
 			return [glob];
@@ -42,4 +45,9 @@ function glob(glob) {
 	return dircache.filter((f) => glob_regex.test(f));
 }
 
-module.exports = glob
+expand_glob.test = function(path, glob) {
+	var glob_regex = make_glob_regex('.', glob);
+	return glob_regex.test(path);
+}
+
+module.exports = expand_glob

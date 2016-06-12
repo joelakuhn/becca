@@ -25,7 +25,7 @@ function runPipeline(pipeline) {
 
 function prereqs_met(node, state) {
   return !node.prev || node.prev.reduce((acc, n) => {
-    return acc && n.run
+    return acc && (n.run || n.skipped);
   }, true);
 }
 
@@ -47,23 +47,30 @@ function run_path(node, args) {
 
 function run_sync(node, args) {
   args.unshift(node.state);
-  node.action.run.apply(node.action, args);
+  var new_state = node.action.run.apply(node.action, args);
   node.run = true;
-  if (node.next) {
-    Runner.runNode(node.next, node.state);
-  }
+  run_next(node, new_state);
 }
 
 function run_async(node, args) {
   args.unshift(function(e, state) {
     if (e) { console.log(e); }
     node.run = true;
-    if (node.next) {
-      Runner.runNode(node.next, state);
-    }
+    run_next(node, state);
   });
   args.unshift(node.state);
   node.action.run.apply(node.action, args);
+}
+
+function skip(node) {
+  node.skipped = true;
+  run_next(node);
+}
+
+function run_next(node, state) {
+  if (node.next) {
+    Runner.runNode(node.next, state || node.state);
+  }
 }
 
 Runner.runNode = function(node, state) {
@@ -75,13 +82,18 @@ Runner.runNode = function(node, state) {
 
   try {
 
-    run_path(node, args);
-
-    if (node.action.sync) {
-      run_sync(node, args);
+    if (state.filtered && !node.action.accept_filtered) {
+      skip(node);
     }
     else {
-      run_async(node, args);
+      run_path(node, args);
+
+      if (node.action.sync) {
+        run_sync(node, args);
+      }
+      else {
+        run_async(node, args);
+      }
     }
 
   } catch (e) {
