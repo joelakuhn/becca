@@ -94,7 +94,17 @@ becca.task('css', function() {
 });
 ```
 
-## Filters
+## Actions
+
+### `append('file_path')`, `prepend('file_path')`
+
+Append or prepend a file to the contents in the pipeline.
+
+### `assert(function(state) { ... })`
+
+Runs a test function which accepts the current state as an argument. If the function does not return true, The pipeline halts for that file.
+
+### `filter(condition)`, `endfilter()`
 
 Filters can be used to limit which files are acted upon for a segment of the pipeline. For example:
 
@@ -109,6 +119,30 @@ becca('lib/jquery.min.js', 'js/*.js')
 In this case, the `uglify_js` action will only run on the files that match the `js/*` glob.
 
 You can also pass regular expressions and functions. Regular expressions match against the file path, while functions are passed a state variable and must return true for any file that should pass the filter.
+
+### `combine(file_name)`
+
+Combines all files into a single file specified by the `file_name` parameter.
+
+### `do(function(state, callback) { ... })`
+
+Do anything you want. For example:
+
+```javascript
+becca('js/main.js')
+.do(function(state, callback) {
+	console.log(state.file.path);
+	callback(null, state);
+});
+```
+
+## `do_sync(function(state) { ... });
+
+```javascript
+becca('js/main.js')
+.do_syncc(function(state) {
+	console.log(state.file.path);
+});
 
 ## TODO
 
