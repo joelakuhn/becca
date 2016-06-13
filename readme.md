@@ -136,7 +136,7 @@ becca('js/*.js')
 });
 ```
 
-**`do_sync(function(state) { ... })**
+**`do_sync(function(state) { ... })`**
 
 ```javascript
 becca('js/main.js')
