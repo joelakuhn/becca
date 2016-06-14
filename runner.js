@@ -38,8 +38,9 @@ function get_state(node, state) {
   }
 }
 
-function run_path(node, args) {
+function run_path(node) {
   if (node.action.path) {
+    var args = node.args.slice(0);
     args.unshift(node.state);
     node.action.path.apply(node.action.path, args)
   }
@@ -49,6 +50,7 @@ function run_sync(node, args) {
   args.unshift(node.state);
   var new_state = node.action.run.apply(node.action, args);
   node.run = true;
+  run_path(node);
   run_next(node, new_state);
 }
 
@@ -56,6 +58,7 @@ function run_async(node, args) {
   args.unshift(function(e, state) {
     if (e) { console.log(e); }
     node.run = true;
+    run_path(node);
     run_next(node, state);
   });
   args.unshift(node.state);
@@ -86,8 +89,6 @@ Runner.runNode = function(node, state) {
       skip(node);
     }
     else {
-      run_path(node, args);
-
       if (node.action.sync) {
         run_sync(node, args);
       }
