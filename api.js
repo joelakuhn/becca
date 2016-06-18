@@ -1,6 +1,7 @@
 var NodeSet     = require('./nodeset.js');
 var Runner      = require('./runner.js');
 var Watcher     = require('./watcher.js');
+var Task        = require('./task.js');
 var glob        = require('./glob.js');
 var fs          = require('fs');
 var open_action = require('./actions/open.js');
@@ -41,18 +42,19 @@ becca.watch = function() {
   return watcher;
 }
 
-becca.task = function(name, callback, args_config) {
-  if (typeof args_config === 'undefined') {
-    args_config = {};
+becca.task = function(name, callback, args_spec) {
+  if (typeof args_spec === 'undefined') {
+    args_spec = {};
   }
   if (typeof name == 'string') name = [name];
 
+  var new_task = new Task(name, callback, args_spec);
+
   for (var i=0; i<name.length; i++) {
-    becca.tasks[name[i]] = {
-      callback: callback,
-      args_config: args_config,
-    };
+    becca.tasks[name[i]] = new_task;
   }
+
+  return new_task;
 }
 
 module.exports = global.becca = becca;
