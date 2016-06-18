@@ -8,7 +8,7 @@ function load_config() {
 		return true;
 	}
 	else {
-		console.error('Could not read beccaconfig.js file.');
+		console.warn('Could not read beccaconfig.js file.');
 		return false;
 	}
 }
@@ -34,7 +34,6 @@ function run_commands(commands) {
 	})
 }
 
-if (load_config()) {
-	var commands = get_commands();
-	run_commands(commands);
-}
+load_config();
+var commands = get_commands();
+run_commands(commands);
