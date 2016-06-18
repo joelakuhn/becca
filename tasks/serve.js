@@ -1,29 +1,30 @@
 function get_mimetype(extension) {
   switch (extension.toLowerCase()) {
+    case 'html':
+    case 'html':  return 'text/html'
+    case 'js':    return 'application/x-javascript'
+    case 'css':   return 'text/css'
+    case 'jpg':
+    case 'jpeg':  return 'image/jpeg'
+    case 'png':   return 'image/png'
+    case 'gif':   return 'image/gif'
+
     case 'au':    return 'audio/basic'
     case 'avi':   return 'video/avi'
     case 'bmp':   return 'image/bmp'
     case 'bz2':   return 'application/x-bzip2'
-    case 'css':   return 'text/css'
     case 'dtd':   return 'application/xml-dtd'
     case 'doc':   return 'application/msword'
     case 'exe':   return 'application/octet-stream'
-    case 'gif':   return 'image/gif'
     case 'gz':    return 'application/x-gzip'
     case 'hqx':   return 'application/mac-binhex40'
-    case 'html':
-    case 'html':  return 'text/html'
     case 'jar':   return 'application/java-archive'
-    case 'jpg':
-    case 'jpeg':  return 'image/jpeg'
-    case 'js':    return 'application/x-javascript'
     case 'midi':  return 'audio/x-midi'
     case 'mp3':   return 'audio/mpeg'
     case 'mpeg':  return 'video/mpeg'
     case 'ogg':   return 'audio/vorbis, application/ogg'
     case 'pdf':   return 'application/pdf'
     case 'pl':    return 'application/x-perl'
-    case 'png':   return 'image/png'
     case 'ppt':   return 'application/vnd.ms-powerpoint'
     case 'ps':    return 'application/postscript'
     case 'qt':    return 'video/quicktime'
