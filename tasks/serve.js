@@ -83,4 +83,4 @@ var arg_spec = {
   '-p': { alias: 'port' }
 };
 
-becca.task('serve', serve, arg_spec);
+becca.task(['serve', 's'], serve, arg_spec);
