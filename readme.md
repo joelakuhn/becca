@@ -44,6 +44,8 @@ All pipelines are automatically included in the `build` and `watch` tasks.
 
 Becca has three tasks by default: `build`, `watch`, and `serve`. Tasks can also be user defined using the `becca.task` function. Becca tasks are what get run when you pass a command to becca. For example, running `becca serve` will start the `serve` task. If no task if given, the `build` task is run by default. Multiple tasks can be run by separating them with commas such as `becca build, watch, serve`.
 
+Tasks can also be run manually by calling the `run` method which accepts either an arguments array which would be passed in through `process.argv` or an arguments object.
+
 ### Default Tasks
 
 `build`
@@ -92,6 +94,20 @@ becca.task('css', function() {
   css.build();
   css.watch();
 });
+```
+
+### Manually calling a task
+
+In this example, we will call `hello_task` from the task `hello-chicago`.
+
+```javascript
+var hello_task = becca.task('hello', function(args) {
+  console.log('Hello', args['name'] || 'world');
+});
+
+becca.task('hello-chicago', function() {
+  hello_task.run({ name: 'Chicago' });
+})
 ```
 
 ## Actions
