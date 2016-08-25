@@ -8,7 +8,7 @@ function load_config() {
 		return true;
 	}
 	else {
-		console.error('Could not read beccaconfig.js file.');
+		console.warn('Could not read beccaconfig.js file.');
 		return false;
 	}
 }
@@ -25,8 +25,7 @@ function run_commands(commands) {
 	commands.forEach(function(command) {
 	  if (command.command in becca.tasks) {
 	    var task = becca.tasks[command.command];
-	    var args = args_parser.parse(task.args_config, command.args);
-	    task.callback(args);
+	    task.run(command.args);
 	  }
 	  else {
 	    console.error('unknown command: ', command.command);
@@ -34,7 +33,6 @@ function run_commands(commands) {
 	})
 }
 
-if (load_config()) {
-	var commands = get_commands();
-	run_commands(commands);
-}
+load_config();
+var commands = get_commands();
+run_commands(commands);
