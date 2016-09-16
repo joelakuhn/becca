@@ -1,3 +1,5 @@
+var verbose = false;
+
 function get_mimetype(extension) {
   switch (extension.toLowerCase()) {
     case 'html':
@@ -65,7 +67,7 @@ function serve_file(req, res, file_path) {
   fs.readFile(file_path, function(err, contents) {
     if (err) serve_error(err);
     else {
-      console.log('200: ' + file_path);
+      if (verbose) console.log('200: ' + file_path);
       write_mime(res, file_path);
       res.write(contents);
       res.end();
@@ -111,7 +113,7 @@ function serve_path(req, res, file_path) {
 }
 
 function serve_404(req, res) {
-  console.log('404: ' + req.url)
+  if (verbose) console.log('404: ' + req.url)
   res.status = 404;
   res.write('not found: ' + req.url);
   res.end();
@@ -124,8 +126,9 @@ function serve(args) {
 
   var root = args[0] || '.';
   var port = args.port || 3000;
+  verbose = args.verbose
 
-  console.log('serving ' + root + ' on port ' + port);
+  if (verbose) console.log('serving ' + root + ' on port ' + port);
 
   var server = http.createServer(function(req, res) {
     var url = req.url.match(/(.*)\??.*/)[1];
@@ -143,7 +146,9 @@ function serve(args) {
 }
 
 var arg_spec = {
-  '-p': { alias: 'port' }
+  '-p': { alias: 'port' },
+  '--verbose': { name: 'verbose', flag: true },
+  '-v': { alias: '--verbose' }
 };
 
 becca.task(['serve', 'server', 's'], serve, arg_spec);
