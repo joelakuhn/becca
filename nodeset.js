@@ -130,13 +130,24 @@ NodeSet.prototype.add_watch = function() {
 }
 
 NodeSet.register = function(action) {
-  NodeSet.prototype[action.name] = (function(action) {
+  var new_nodeset = (function(action) {
     return function() {
       var args = Array.prototype.slice.apply(arguments);
       var new_nodeset = new NodeSet([this], action, args);
       return new_nodeset;
     }
   })(action);
+  NodeSet.prototype[action.name] = new_nodeset;
+  if (action.alias) {
+    if (action.alias.length) {
+      for (var i=0; i<action.alias.length; i++) {
+        NodeSet.prototype[action.alias[i]] = new_nodeset;
+      }
+    }
+    if (typeof action.alias === 'string') {
+      NodeSet.prototype[action.alias] = new_nodeset;
+    }
+  }
 }
 
 module.exports = NodeSet;
