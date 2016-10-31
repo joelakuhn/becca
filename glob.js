@@ -62,6 +62,15 @@ function in_dircache(path) {
 	return found_file.length > 0;
 }
 
+function remove_from_cache(path) {
+	for (var i=0; i<dircache.length; i++) {
+		if (dircache[i].path == path) {
+			dircache.splice(i, 1);
+			break;
+		}
+	}
+}
+
 function watch_for_changes() {
 	if (watching_for_new_files) return;
 
@@ -70,8 +79,8 @@ function watch_for_changes() {
 	directories.forEach((dir) => {
 		fs.watch(dir, (event_type, filename) => {
 			if (event_type === 'change') return;
-
 			var path = dir + '/' + filename;
+
 			if (!in_dircache(path)) {
 				dircache.push({ type: 'f', path: path });
 				new_file_callbacks.forEach((cb) => {
@@ -79,6 +88,9 @@ function watch_for_changes() {
 						cb.callback(path);
 					}
 				});
+			}
+			else {
+				remove_from_cache(path);
 			}
 		});
 	});

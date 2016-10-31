@@ -61,7 +61,13 @@ function run(file, node) {
       }
     }
     else {
-      console.log('Watcher could not get modified time for ' + node.file);
+      if (err.code === 'ENOENT') {
+        node.nodeset.remove_node(node);
+        console.log('Stopped watching:', node.file);
+      }
+      else {
+        console.log('Watcher could not get modified time for ' + node.file);
+      }
     }
   });
 }

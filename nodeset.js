@@ -34,22 +34,23 @@ function create_coalesce_node(objects, action, args) {
   return node;
 }
 
-function create_node(object, action, args) {
+function create_node(object, action, args, nodeset) {
   var root = typeof object.file === 'undefined';
   var new_node = {
-    file: root ? object : object.file,
-    action: action,
-    args: args || [],
-    prev: root ? null : [ object ],
-    root: root
+    file    : root ? object : object.file,
+    action  : action,
+    args    : args || [],
+    prev    : root ? null   : [ object ],
+    root    : root,
+    nodeset : nodeset
   }
   if (typeof object !== 'string') object.next = new_node;
   return new_node;
 }
 
-function create_nodes(objects, action, args) {
+function create_nodes(objects, action, args, nodeset) {
   var nodes = objects.map(function(object) {
-    return create_node(object, action, args);
+    return create_node(object, action, args, nodeset);
   });
   return nodes;
 }
@@ -85,7 +86,7 @@ function NodeSet(selectors, action, args) {
     this.nodes = [ create_coalesce_node(objects, action, args) ];
   }
   else {
-    this.nodes = create_nodes(objects, action, args);
+    this.nodes = create_nodes(objects, action, args, this);
   }
 
   selectors.forEach((object) => {
@@ -97,12 +98,23 @@ function NodeSet(selectors, action, args) {
 }
 
 NodeSet.prototype.add_node = function(object) {
-  var new_node = create_node(object, this.action, this.args);
+  var new_node = create_node(object, this.action, this.args, this);
   this.nodes.push(new_node);
   if (this.next) {
     this.next.add_node(new_node);
   }
   return new_node;
+}
+
+NodeSet.prototype.remove_node = function(node) {
+  for (var i=0; i<this.nodes.length; i++) {
+    if (this.nodes[i] === node) {
+      this.nodes.splice(i, 1);
+      if (node.next) {
+        node.next.nodeset.remove_node(node.next);
+      }
+    }
+  }
 }
 
 NodeSet.prototype.getRoot = function() {

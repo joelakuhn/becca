@@ -169,4 +169,4 @@ becca('js/main.js')
 - ~~Extensible watch mode~~
 - Handle binary files properly
 - ~~Watch globs, so adding a file that matches a pipeline glob will automatically be added to the pipeline when it is created, and files in a pipeline that are removed from the filesystem will automatically be removed from the pipeline.~~
-- Remove files from a pipeline when they are removed from the file system.
+- ~~Remove files from a pipeline when they are removed from the file system or renamed.~~
