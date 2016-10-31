@@ -34,18 +34,22 @@ function create_coalesce_node(objects, action, args) {
   return node;
 }
 
+function create_node(object, action, args) {
+  var root = typeof object.file === 'undefined';
+  var new_node = {
+    file: root ? object : object.file,
+    action: action,
+    args: args || [],
+    prev: root ? null : [ object ],
+    root: root
+  }
+  if (typeof object !== 'string') object.next = new_node;
+  return new_node;
+}
+
 function create_nodes(objects, action, args) {
   var nodes = objects.map(function(object) {
-    var root = typeof object.file === 'undefined';
-    var new_node = {
-      file: root ? object : object.file,
-      action: action,
-      args: args || [],
-      prev: root ? null : [ object ],
-      root: root
-    }
-    if (typeof object !== 'string') object.next = new_node;
-    return new_node;
+    return create_node(object, action, args);
   });
   return nodes;
 }
@@ -69,6 +73,12 @@ function CheckObjects(objects, selectors) {
 }
 
 function NodeSet(selectors, action, args) {
+  this.action = action;
+  this.args = args;
+  this.selectors = selectors;
+  this.prev = [];
+  this.watched_files = [];
+
   var objects = expand_selectors(selectors);
   CheckObjects(objects, selectors);
   if (action.coalesce) {
@@ -78,15 +88,21 @@ function NodeSet(selectors, action, args) {
     this.nodes = create_nodes(objects, action, args);
   }
 
-  this.prev = [];
-  this.watched_files = [];
-
   selectors.forEach((object) => {
     if (object instanceof NodeSet) {
       this.prev.push(object);
       object.next = this;
     }
   });
+}
+
+NodeSet.prototype.add_node = function(object) {
+  var new_node = create_node(object, this.action, this.args);
+  this.nodes.push(new_node);
+  if (this.next) {
+    this.next.add_node(new_node);
+  }
+  return new_node;
 }
 
 NodeSet.prototype.getRoot = function() {
