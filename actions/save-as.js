@@ -5,7 +5,7 @@ module.exports = {
   run: function(state, callback, new_path) {
     fs.writeFile(new_path, state.contents, function() {
       console.log('wrote: ', new_path);
-      callback(null, state);
+      callback(state);
     });
   },
 

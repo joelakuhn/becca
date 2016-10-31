@@ -9,7 +9,7 @@ module.exports = {
       });
     }
     else {
-      callback(null, state);
+      callback(state);
     }
   }
 }

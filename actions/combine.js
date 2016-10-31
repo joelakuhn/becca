@@ -9,6 +9,6 @@ module.exports = {
         path.setFilename(name);
     }
     var contents = states.map((s) => s.contents).join("\n");
-    callback(null, { file: path, contents: contents });
+    callback({ file: path, contents: contents });
   }
 }

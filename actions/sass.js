@@ -14,7 +14,7 @@ module.exports = {
 			}
 			else {
 				state.contents = result.css.toString();
-				callback(null, state);
+				callback(state);
 			}
 		});
 
