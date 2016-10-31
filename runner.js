@@ -55,8 +55,12 @@ function run_sync(node, args) {
 }
 
 function run_async(node, args) {
-  args.unshift(function(e, state) {
-    if (e) { console.log(e); }
+  args.unshift(function(err, state) {
+    if (arguments.length == 1) {
+      state = err;
+      err = null;
+    }
+    if (err) { console.log(err); }
     node.run = true;
     run_path(node);
     run_next(node, state);
