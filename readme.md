@@ -164,7 +164,7 @@ becca('js/main.js')
 ## TODO
 
 - ~~Composable pipelines (taking the results of a pipeline and pluging it into another)~~
-- Transparent plugin detection
+- ~~Transparent plugin detection~~
 - Pipeline branching
 - ~~Extensible watch mode~~
 - Handle binary files properly
