@@ -152,7 +152,9 @@ NodeSet.prototype.add_watch = function() {
   var files = expand_selectors(arguments)
   var root = this.getRoot();
   for (var i=0; i<files.length; i++) {
-    root.watched_files.push(files[i]);
+    if (root.watched_files.indexOf(files[i]) < 0) {
+      root.watched_files.push(files[i]);
+    }
   }
   return this;
 }
