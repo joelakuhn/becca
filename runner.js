@@ -31,12 +31,7 @@ function prereqs_met(node, state) {
 
 function open_file(node, state, callback) {
   fs.readFile(state.file.path, function(err, contents) {
-    if (node.binary) {
-      state.contents = contents
-    }
-    else {
-      state.contents = contents.toString();
-    }
+    state.contents = contents
     callback(err, state);
   });
 }
@@ -49,6 +44,9 @@ function get_state(node, state, callback) {
     open_file(node, state, callback);
   }
   else {
+    if (!node.binary && state.contents instanceof Buffer) {
+      state.contents = state.contents.toString();
+    }
     callback(null, state);
   }
 }
