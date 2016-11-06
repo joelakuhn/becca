@@ -1,16 +1,16 @@
-var NodeSet     = require('./nodeset.js');
-var Runner      = require('./runner.js');
-var Watcher     = require('./watcher.js');
-var Task        = require('./task.js');
-var glob        = require('./glob.js');
-var fs          = require('fs');
-var open_action = require('./actions/open.js');
-var load_config = require('./load-config.js');
+var NodeSet           = require('./nodeset.js');
+var Runner            = require('./runner.js');
+var Watcher           = require('./watcher.js');
+var Task              = require('./task.js');
+var glob              = require('./glob.js');
+var fs                = require('fs');
+var load_config       = require('./load-config.js');
+var do_nothing_action = require('./actions/do-nothing');
 
 
 function becca() {
   var objects = Array.prototype.slice.apply(arguments);
-  var new_pipeline = new NodeSet(objects, open_action);
+  var new_pipeline = new NodeSet(objects, do_nothing_action);
   becca.pipelines.push(new_pipeline);
   return new_pipeline;
 }

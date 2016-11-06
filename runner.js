@@ -29,12 +29,27 @@ function prereqs_met(node, state) {
   }, true);
 }
 
-function get_state(node, state) {
+function open_file(node, state, callback) {
+  fs.readFile(state.file.path, function(err, contents) {
+    if (node.binary) {
+      state.contents = contents
+    }
+    else {
+      state.contents = contents.toString();
+    }
+    callback(err, state);
+  });
+}
+
+function get_state(node, state, callback) {
   if (node.action.coalesce) {
-    return state = node.prev.map((n) => n.state);
+    callback(null, state = node.prev.map((n) => n.state));
+  }
+  else if (!('contents' in state)) {
+    open_file(node, state, callback);
   }
   else {
-    return state;
+    callback(null, state);
   }
 }
 
@@ -85,25 +100,36 @@ Runner.runNode = function(node, state) {
 
   if (!prereqs_met(node, state)) return;
 
-  node.state = get_state(node, state);
+  get_state(node, state, function(err, state) {
 
-  try {
-
-    if (state.filtered && !node.action.accept_filtered) {
-      skip(node);
+    if (err) {
+      console.log(err);
+      return;
     }
-    else {
-      if (node.action.sync) {
-        run_sync(node, args);
+
+    node.state = state;
+
+    try {
+
+      if (state.filtered && !node.action.accept_filtered) {
+        skip(node);
       }
       else {
-        run_async(node, args);
+        if (node.action.sync) {
+          run_sync(node, args);
+        }
+        else {
+          run_async(node, args);
+        }
       }
+
+    }
+    catch (err) {
+      console.log(err);
     }
 
-  } catch (e) {
-    console.log(e);
-  }
+  });
+
 }
 
 module.exports = Runner;
