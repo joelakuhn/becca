@@ -1,6 +1,7 @@
 module.exports = {
-  name: 'filter',
-  sync: true,
+  name:            'filter',
+  sync:            true,
+  datatype:        'any',
   accept_filtered: true,
   run: function(state, comparer) {
     var glob = require('../glob.js')

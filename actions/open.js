@@ -1,5 +1,7 @@
 module.exports = {
-  name: 'open',
+  name:     'open',
+  datatype: 'any',
+
   run: function(state, callback) {
     if (typeof state.contents === 'undefined') {
       var fs = require('fs');

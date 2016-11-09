@@ -1,7 +1,9 @@
 var fs = require('fs');
 
 module.exports = {
-  name: 'save',
+  name:     'save',
+  datatype: 'any',
+
   run: function(state, callback) {
     // fs.mkdirp(file.dir(), function(err) {
     //   if (err) throw err;

@@ -161,6 +161,18 @@ becca('js/main.js')
 });
 ```
 
+**`execute(executable, args)`**
+
+Runs a system executable and pipes the current content to stdin. The results of stdout become the new content. The arguments for this command are exactly the arguments for `child_process.spawn`. The following example uses the `pngquant` executable to minify all png images before saving them to the `public` folder.
+
+```javascript
+becca('app/img/*.png')
+.execute('pngquant', [ '--quality=0-90', '-' ])
+.save_to('public/img')
+```
+
+```javascript
+
 ## TODO
 
 - ~~Composable pipelines (taking the results of a pipeline and pluging it into another)~~

@@ -44,10 +44,19 @@ function get_state(node, state, callback) {
     open_file(node, state, callback);
   }
   else {
-    if (!node.binary && state.contents instanceof Buffer) {
-      state.contents = state.contents.toString();
+    if (node.action.datatype == 'any') {
+      callback(null, state);
     }
-    callback(null, state);
+    else if (node.action.datatype == 'binary') {
+      callback(null, state);
+    }
+    else if (state.contents instanceof Buffer) {
+      state.contents = state.contents.toString();
+      callback(null, state);
+    }
+    else {
+      callback(null, state);
+    }
   }
 }
 
