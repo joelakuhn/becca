@@ -3,6 +3,6 @@ module.exports = {
   sync: true,
   run: function(state, options) {
     var cmm = require('css-media-merge');
-  	state.contents = cmm.merge(state.contents, options);
+    state.contents = cmm.merge(state.contents, options);
   }
 }

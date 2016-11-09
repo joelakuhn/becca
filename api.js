@@ -29,9 +29,9 @@ becca.action = function(action) {
 
 
 becca.build = function() {
-	var runner = new Runner(becca.pipelines);
+  var runner = new Runner(becca.pipelines);
 
-	runner.start();
+  runner.start();
 
   return runner;
 }
