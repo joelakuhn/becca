@@ -159,6 +159,14 @@ NodeSet.prototype.add_watch = function() {
   return this;
 }
 
+NodeSet.prototype.name = function(name) {
+  var nodeset = this;
+  becca.task(name, function() {
+    nodeset.build();
+  });
+  return this;
+}
+
 NodeSet.register = function(action) {
   var new_nodeset = (function(action) {
     return function() {
