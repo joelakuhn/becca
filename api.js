@@ -57,6 +57,10 @@ becca.task = function(name, callback, args_spec) {
   return new_task;
 }
 
+becca.default = function(task) {
+  becca.default_task = task;
+}
+
 becca.register = function(action) {
   NodeSet.register(action);
 }

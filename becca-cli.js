@@ -16,7 +16,12 @@ function load_config() {
 function get_commands() {
   var commands = args_parser.get_commands();
   if (commands.length == 0) {
-    commands = [ { command: 'build' } ];
+    if (becca.default_task) {
+      commands = args_parser.get_commands(becca.default_task);
+    }
+    else {
+      commands = [ { command: 'build' } ];
+    }
   }
   return commands;
 }
