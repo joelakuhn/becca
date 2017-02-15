@@ -57,6 +57,13 @@ becca.task = function(name, callback, args_spec) {
   return new_task;
 }
 
+becca.log = function(log_path) {
+  var log_stream = fs.createWriteStream(log_path);
+  var bound_log_stream = log_stream.write.bind(log_stream);
+  process.stdout.write = bound_log_stream;
+  process.stderr.write = bound_log_stream;
+}
+
 becca.default = function(task) {
   becca.default_task = task;
 }
