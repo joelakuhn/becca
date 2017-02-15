@@ -9,7 +9,7 @@ module.exports = {
 
     stylus.render(state.contents, options, function(err, css) {
       if (err) {
-        callback(err);
+        callback(err, state);
       }
       else {
         state.contents = css;
