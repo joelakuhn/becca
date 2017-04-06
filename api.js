@@ -2,11 +2,11 @@ var NodeSet           = require('./nodeset.js');
 var Runner            = require('./runner.js');
 var Watcher           = require('./watcher.js');
 var Task              = require('./task.js');
+var Console           = require('./console.js');
 var glob              = require('./glob.js');
 var fs                = require('fs');
 var load_config       = require('./load-config.js');
 var do_nothing_action = require('./actions/do-nothing');
-
 
 function becca() {
   var objects = Array.prototype.slice.apply(arguments);
@@ -56,6 +56,8 @@ becca.task = function(name, callback, args_spec) {
 
   return new_task;
 }
+
+becca.console = Console;
 
 becca.log = function(log_path) {
   var log_stream = fs.createWriteStream(log_path);

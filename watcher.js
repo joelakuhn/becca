@@ -32,7 +32,7 @@ Watcher.prototype.add_nodeset = function(nodeset) {
   .filter((s) => typeof s === 'string')
   .forEach((s) => {
     glob.on_new_file(s, (path) => {
-      console.log('started watching:', path);
+      becca.console.log('started watching:', path);
       var new_node = nodeset.add_node(path);
       watch(new_node);
       run(new_node.file, new_node);
@@ -63,10 +63,10 @@ function run(file, node) {
     else {
       if (err.code === 'ENOENT') {
         node.nodeset.remove_node(node);
-        console.log('Stopped watching:', node.file);
+        becca.console.log('Stopped watching:', node.file);
       }
       else {
-        console.log('Watcher could not get modified time for ' + node.file);
+        becca.console.log('Watcher could not get modified time for ' + node.file);
       }
     }
   });

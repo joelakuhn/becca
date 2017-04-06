@@ -67,7 +67,7 @@ function serve_file(req, res, file_path) {
   fs.readFile(file_path, function(err, contents) {
     if (err) serve_error(err);
     else {
-      if (verbose) console.log('200: ' + file_path);
+      if (verbose) becca.console.log('200: ' + file_path);
       write_mime(res, file_path);
       res.write(contents);
       res.end();
@@ -113,7 +113,7 @@ function serve_path(req, res, file_path) {
 }
 
 function serve_404(req, res) {
-  if (verbose) console.log('404: ' + req.url)
+  if (verbose) becca.console.log('404: ' + req.url)
   res.status = 404;
   res.write('not found: ' + req.url);
   res.end();
@@ -128,7 +128,7 @@ function serve(args) {
   var port = args.port || 3000;
   verbose = args.verbose
 
-  if (verbose) console.log('serving ' + root + ' on port ' + port);
+  if (verbose) becca.console.log('serving ' + root + ' on port ' + port);
 
   var server = http.createServer(function(req, res) {
     var url = req.url.match(/(.*)\??.*/)[1];

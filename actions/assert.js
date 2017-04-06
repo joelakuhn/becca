@@ -7,7 +7,7 @@ module.exports = {
       callback(state);
     }
     else {
-      console.log('Assertion failed. Stopping Pipeline.');
+      becca.console.log('Assertion failed. Stopping Pipeline.');
     }
   }
 }

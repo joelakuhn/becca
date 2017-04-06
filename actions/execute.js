@@ -5,7 +5,7 @@ module.exports = {
 
   run: function(state, callback, command, args) {
     var spawn = require('child_process').spawn;
-    console.log(command + ' ' + args.join(' '));
+    becca.console.log(command + ' ' + args.join(' '));
     var proc = spawn(command, args);
     var data_chunks = [];
     var error_chunks = [];

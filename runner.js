@@ -80,7 +80,14 @@ function run_async(node, args) {
       state = err;
       err = null;
     }
-    if (err) { console.log(err); }
+    if (err) {
+      if ('message' in err) {
+        becca.console.log(err.message);
+      }
+      else {
+        becca.console.log(err);
+      }
+    }
     node.run = true;
     run_path(node);
     run_next(node, state);
@@ -152,7 +159,7 @@ Runner.runNode = function(node, state) {
   get_state(node, state, function(err, state) {
 
     if (err) {
-      console.log(err);
+      becca.console.log(err);
       return;
     }
 
@@ -174,7 +181,7 @@ Runner.runNode = function(node, state) {
 
     }
     catch (err) {
-      console.log(err);
+      becca.console.log(err);
     }
 
   });
