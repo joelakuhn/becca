@@ -181,6 +181,7 @@ becca('app/img/*.png')
 - ~~Watch globs, so adding a file that matches a pipeline glob will automatically be added to the pipeline when it is created, and files in a pipeline that are removed from the filesystem will automatically be removed from the pipeline.~~
 - ~~Remove files from a pipeline when they are removed from the file system or renamed.~~
 - Support source maps. These might be more generalized as "rider" files that ride along with your main files in the pipeline.
+- Flesh out executables
 
 ## Plugins to add
 
