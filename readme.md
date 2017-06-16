@@ -171,8 +171,6 @@ becca('app/img/*.png')
 .save_to('public/img')
 ```
 
-```javascript
-
 ## TODO
 
 - ~~Composable pipelines (taking the results of a pipeline and pluging it into another)~~
