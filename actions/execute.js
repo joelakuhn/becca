@@ -4,9 +4,9 @@ module.exports = {
   alias:    [ 'bin', 'exe' ],
 
   run: function(state, callback, command, args) {
+    if (!args) args = [];
     var spawn = require('child_process').spawn;
-    becca.console.log(command + ' ' + args.join(' '));
-    var proc = spawn(command, args);
+    var proc = spawn(command, args, { cwd: state.file.dir() });
     var data_chunks = [];
     var error_chunks = [];
 
