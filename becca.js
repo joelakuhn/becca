@@ -5,6 +5,8 @@ var becca         = require('./api.js');
 var require_all   = require('./require-all.js');
 var plugin_loader = require('./plugin-loader.js');
 
+becca.require = require('./require.js');
+
 ///////// REGISTER ACTIONS /////////
 
 require_all('actions').forEach(NodeSet.register);
